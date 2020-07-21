@@ -11,12 +11,9 @@ public class CreateTableName extends Middleware {
 
     @Override
     public boolean check(String query) {
-        String[] list = query.split(" ");
-        if (list.length < 3 || !list[3].startsWith("(")) return false; //TODO: define more in-depth condition -- see query6 testcase, ALSO make it more like dynamic programming, see createEndsProperly return.
-
-        System.out.println("list 2 is "+list[2]);
-
-        if (!database.getTables().containsKey(list[2])){
+        String[] list = query.trim().split("\\(");
+        if (list.length < 2 || query.startsWith("(")) return false;
+        if (!database.getTables().containsKey(list[0])){
             return checkNext(query);
         }
         return false;

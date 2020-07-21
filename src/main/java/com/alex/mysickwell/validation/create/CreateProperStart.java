@@ -11,7 +11,7 @@ public class CreateProperStart extends Middleware {
         if (query == null || query.length() <= start.length()) return false;
 
         if (query.toUpperCase().startsWith(start)){
-            return checkNext(query);
+            return checkNext(query.substring(start.length()));
         }
         return false;
     }

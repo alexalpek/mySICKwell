@@ -2,11 +2,10 @@ package com.alex.mysickwell.createValidation;
 
 import com.alex.mysickwell.model.Database;
 import com.alex.mysickwell.validation.Middleware;
-import com.alex.mysickwell.validation.create.CreateEndsProperly;
-import com.alex.mysickwell.validation.create.CreateProperStart;
-import com.alex.mysickwell.validation.create.CreateTableName;
-import com.alex.mysickwell.validation.create.CreateTableParameters;
+import com.alex.mysickwell.validation.create.*;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,84 +13,98 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class createValidationTest {
-
-    private Middleware validator = new CreateProperStart();
-
     @Autowired
     private Database database;
+    @Autowired
+    private CreateTableValidatorProvider provider;
+
+    private Middleware validator;
 
     private String query1 = "";
     private String query2 = null;
-    private String query3 = "CREATE TABLE asd (kek VARCHAR, lol BOOLEAN, asd INTEGER);";
+    private String query3 = "CREATE TABLE asd(kek VARCHAR, lol BOOLEAN, asd INTEGER);";
     private String query4 = "CREATE TABLE asd (kek, lol BOOLEAN, asd INTEGER);";
+    private String query9 = "CREATE TABLE asd (kek INTEGER, lol NOTSUPPORTED, asd INTEGER);";
     private String query5 = "CREATE TABLE (kek INTEGER, lol BOOLEAN, asd INTEGER);";
     private String query6 = "cReaTe tAblE (););";
+    private String query7 = "asd (";
 
+    private String fanniQuery = "create table asd(); INTEGER kek, ););";
 
 
     @BeforeEach
     void init(){
-        validator
-                .linkWith(new CreateTableName(database))
-                .linkWith(new CreateEndsProperly())
-                .linkWith(new CreateTableParameters());
+        validator = provider.getMiddleware();
     }
 
     @Test
-    void createTableParametersMiddlewareWorks(){
-        Middleware middleware = new CreateTableParameters();
+    void createTableParametersMiddlewareWorks() {
+        Middleware middleware = new CreateTableHasParameters();
         String query = "CREATE TABLE asd (kek VARCHAR, lol BOOLEAN, asd INTEGER";
         assertTrue(middleware.check(query));
     }
 
     @Test
-    void createProperStartWorks(){
+    void createProperStartWorks() {
         Middleware middleware = new CreateProperStart();
         assertTrue(middleware.check(query3));
     }
 
     @Test
-    void createTableNameWorks(){
+    void createTableNameWorks() {
         Middleware middleware = new CreateTableName(database);
         assertTrue(middleware.check(query3));
     }
 
     @Test
-    void createEndsProperlyWorks(){
+    void createEndsProperlyWorks() {
         Middleware middleware = new CreateEndsProperly();
         assertTrue(middleware.check(query3));
     }
 
     @Test
-    void testQuery1(){
+    void emptyStringFails() {
         assertFalse(validator.check(query1));
     }
 
     @Test
-    void testQuery2(){
+    void nullFails() {
         assertFalse(validator.check(query2));
     }
 
     @Test
-    void testQuery3(){
+    void properQueryPasses() {
         assertTrue(validator.check(query3));
     }
 
     @Test
-    void testQuery4(){
+    void allQueryParametersHasToHaveTwoParts() {
         assertFalse(validator.check(query4));
     }
 
     @Test
-    void testQuery5(){
+    void tableNameHasToBeThere() {
         assertFalse(validator.check(query5));
     }
 
     @Test
-    void testQuery6(){
+    void multipleBracketsFails() {
         assertFalse(validator.check(query6));
     }
 
+    @Test
+    void noParametersFails() {
+        assertFalse(validator.check(query7));
+    }
 
+    @Test
+    void fanniTriesToBreakItButFailsHopefully() {
+        assertFalse(validator.check(fanniQuery));
+    }
+
+    @Test
+    void notSupportedQueryParameterTypeFails() {
+        assertFalse(validator.check(query9));
+    }
 
 }
