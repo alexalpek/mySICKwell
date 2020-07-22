@@ -46,21 +46,10 @@ public class createValidationTest {
         assertTrue(middleware.check(query));
     }
 
-    @Test
-    void createProperStartWorks() {
-        Middleware middleware = new QueryProperStart("CREATE TABLE ");
-        assertTrue(middleware.check(query3));
-    }
 
     @Test
     void createTableNameWorks() {
         Middleware middleware = new CreateTableName(database);
-        assertTrue(middleware.check(query3));
-    }
-
-    @Test
-    void createEndsProperlyWorks() {
-        Middleware middleware = new QueryEndsProperly(");");
         assertTrue(middleware.check(query3));
     }
 
