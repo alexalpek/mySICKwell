@@ -13,7 +13,7 @@ public class Database {
 
     private Map<String, Table> tables = new HashMap<>();
 
-    public void createTable(String tableName, HashMap<Column<?>, LinkedList<Row<?>>> table) {
+    public void createTable(String tableName, HashMap<Column, LinkedList<?>> table) {
         tables.put(tableName, new Table(table));
     }
 }

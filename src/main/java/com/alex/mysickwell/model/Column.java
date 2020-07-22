@@ -1,7 +1,14 @@
 package com.alex.mysickwell.model;
 
-public class Column<T> {
+import lombok.Builder;
+import lombok.ToString;
 
-    private T type;
+@Builder
+@ToString
+public class Column {
+
+    private String name;
+    private ColumnType type;
+    private boolean notNull;
 
 }

@@ -9,6 +9,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class Table {
 
-    private Map<Column<?>, LinkedList<Row<?>>> data = new HashMap<>();
+    private Map<Column, LinkedList<?>> data = new HashMap<>();
 
 }
