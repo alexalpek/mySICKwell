@@ -24,20 +24,19 @@ public class CreateTableService {
     private final Logger logger = LoggerFactory.getLogger(CreateTableService.class);
     private final CreateQueryUtil util;
     private Database database;
-
     private Middleware validator;
 
 
     public ResponseEntity<?> createTable(String query){
         if (!validator.check(query)) {
             logger.info("Got malformed query: " + query);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Query is malformed.",HttpStatus.BAD_REQUEST);
         }
         String tableName = util.getTableNameFromQuery(query);
         HashMap<Column, LinkedList<?>> table = util.getTableColumnsFromQuery(query);
         database.createTable(tableName, table);
-        logger.info("Table created with name of " + tableName);
-        return new ResponseEntity<>(HttpStatus.OK);
+        logger.info("Table created with name of " + tableName + " with data of " + table);
+        return new ResponseEntity<>("Table created with name of " + tableName, HttpStatus.OK);
     }
 
     @Autowired
