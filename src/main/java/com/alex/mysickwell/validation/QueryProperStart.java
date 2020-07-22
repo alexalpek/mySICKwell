@@ -1,9 +1,12 @@
-package com.alex.mysickwell.validation.create;
+package com.alex.mysickwell.validation;
 
 import com.alex.mysickwell.validation.Middleware;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
+public class QueryProperStart extends Middleware {
 
-public class CreateProperStart extends Middleware {
+    private final String startingString;
 
     @Override
     public boolean check(String query) {

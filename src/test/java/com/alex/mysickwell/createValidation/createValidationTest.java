@@ -1,6 +1,8 @@
 package com.alex.mysickwell.createValidation;
 
 import com.alex.mysickwell.model.Database;
+import com.alex.mysickwell.validation.QueryEndsProperly;
+import com.alex.mysickwell.validation.QueryProperStart;
 import com.alex.mysickwell.validation.Middleware;
 import com.alex.mysickwell.validation.create.*;
 
@@ -46,7 +48,7 @@ public class createValidationTest {
 
     @Test
     void createProperStartWorks() {
-        Middleware middleware = new CreateProperStart();
+        Middleware middleware = new QueryProperStart("CREATE TABLE ");
         assertTrue(middleware.check(query3));
     }
 
@@ -58,7 +60,7 @@ public class createValidationTest {
 
     @Test
     void createEndsProperlyWorks() {
-        Middleware middleware = new CreateEndsProperly();
+        Middleware middleware = new QueryEndsProperly(");");
         assertTrue(middleware.check(query3));
     }
 
