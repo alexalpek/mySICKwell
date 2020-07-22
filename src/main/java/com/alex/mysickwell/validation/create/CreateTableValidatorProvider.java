@@ -10,13 +10,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class CreateTableValidatorProvider {
 
-    private Middleware middleware = new QueryProperStart("CREATE TABLE ");
+    private final String CREATE_QUERY_START = "CREATE TABLE ";
+    private final String CREATE_QUERY_END = ");";
+
+    private Middleware middleware = new QueryProperStart(CREATE_QUERY_START);
 
     @Autowired
     public CreateTableValidatorProvider(Database database) {
         this.middleware
                 .linkWith(new CreateTableName(database))
-                .linkWith(new QueryEndsProperly(");"))
+                .linkWith(new QueryEndsProperly(CREATE_QUERY_END))
                 .linkWith(new CreateTableHasParameters())
                 .linkWith(new CreateTableHasSupportedParameters());
     }
