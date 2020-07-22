@@ -34,7 +34,7 @@ public class CreateTableService {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         String tableName = util.getTableNameFromQuery(query);
-        HashMap<Column<?>, LinkedList<Row<?>>> table = util.getTableColumnsFromQuery(query);
+        HashMap<Column, LinkedList<?>> table = util.getTableColumnsFromQuery(query);
         database.createTable(tableName, table);
         logger.info("Table created with name of " + tableName);
         return new ResponseEntity<>(HttpStatus.OK);
