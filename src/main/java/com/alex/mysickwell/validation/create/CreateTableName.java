@@ -12,7 +12,7 @@ public class CreateTableName extends Middleware {
     @Override
     public boolean check(String query) {
         String[] list = query.trim().split("\\(");
-        if (list.length < 2 || query.startsWith("(")) return false;
+        if (list.length < 2 || query.startsWith("(") || list[0].equals("")) return false;
         if (!database.getTables().containsKey(list[0])){
             return checkNext(query);
         }
