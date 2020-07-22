@@ -2,7 +2,6 @@ package com.alex.mysickwell.util;
 
 import com.alex.mysickwell.model.Column;
 import com.alex.mysickwell.model.ColumnType;
-import com.alex.mysickwell.model.Row;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

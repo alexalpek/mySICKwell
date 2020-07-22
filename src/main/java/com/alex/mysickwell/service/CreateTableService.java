@@ -2,7 +2,6 @@ package com.alex.mysickwell.service;
 
 import com.alex.mysickwell.model.Column;
 import com.alex.mysickwell.model.Database;
-import com.alex.mysickwell.model.Row;
 import com.alex.mysickwell.util.CreateQueryUtil;
 import com.alex.mysickwell.validation.Middleware;
 import com.alex.mysickwell.validation.create.*;
