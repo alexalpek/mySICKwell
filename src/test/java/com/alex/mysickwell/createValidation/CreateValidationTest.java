@@ -1,20 +1,20 @@
 package com.alex.mysickwell.createValidation;
 
 import com.alex.mysickwell.model.Database;
-import com.alex.mysickwell.validation.QueryEndsProperly;
-import com.alex.mysickwell.validation.QueryProperStart;
 import com.alex.mysickwell.validation.Middleware;
-import com.alex.mysickwell.validation.create.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.alex.mysickwell.validation.create.CreateTableValidatorProvider;
+import com.alex.mysickwell.validation.create.middleware.CreateTableHasParameters;
+import com.alex.mysickwell.validation.create.middleware.CreateTableName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @SpringBootTest
-public class createValidationTest {
+public class CreateValidationTest {
     @Autowired
     private Database database;
     @Autowired

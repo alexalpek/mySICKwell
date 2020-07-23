@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class createQueryUtilsTest {
+public class CreateQueryUtilsTest {
 
     @Autowired
     private CreateQueryUtil util;
@@ -18,7 +18,7 @@ public class createQueryUtilsTest {
 
 
     @Test
-    void getTableNameFromQueryWithoutSpace(){
+    void getTableNameFromQueryWithoutSpace() {
         assertEquals("tableNameWithoutSpace", util.getTableNameFromQuery(queryWithoutSpace));
     }
     @Test

@@ -1,12 +1,13 @@
 package com.alex.mysickwell.commonMiddlewareTest;
 
 import com.alex.mysickwell.validation.Middleware;
-import com.alex.mysickwell.validation.QueryEndsProperly;
+import com.alex.mysickwell.validation.QueryProperEnd;
 import com.alex.mysickwell.validation.QueryProperStart;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class CommonMiddlewareTest {
@@ -29,13 +30,13 @@ public class CommonMiddlewareTest {
 
     @Test
     void EndWorksWithProperQuery() {
-        Middleware middleware = new QueryEndsProperly(");");
+        Middleware middleware = new QueryProperEnd(");");
         assertTrue(middleware.check(properQuery));
     }
 
     @Test
     void EndWorksWithImproperQuery() {
-        Middleware middleware = new QueryEndsProperly(");");
+        Middleware middleware = new QueryProperEnd(");");
         assertFalse(middleware.check(improperQuery));
     }
 
