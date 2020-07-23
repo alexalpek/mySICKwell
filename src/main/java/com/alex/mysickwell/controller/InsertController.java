@@ -1,6 +1,6 @@
 package com.alex.mysickwell.controller;
 
-import com.alex.mysickwell.service.CreateTableService;
+import com.alex.mysickwell.service.InsertService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -10,15 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/create")
-public class CreateController {
+@RequestMapping("/insert")
+public class InsertController {
 
-    private final CreateTableService createTableService;
+    private InsertService insertService;
 
     @PutMapping
-    public ResponseEntity<?> createNewTable(@RequestBody String query){
+    public ResponseEntity<?> insertToTable(@RequestBody String query) {
         System.out.println("query is " + query);
-        return createTableService.createTable(query);
+        return insertService.insertToTable(query);
     }
-
 }
