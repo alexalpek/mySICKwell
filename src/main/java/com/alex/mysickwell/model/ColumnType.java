@@ -14,7 +14,18 @@ public enum ColumnType {
         return datatype;
     }
 
-    public static ColumnType getTypeByString(String string){
+    public static ColumnType getTypeByString(String string) {
         return ColumnType.valueOf(string);
+    }
+
+    public static boolean allowedType(String string) { //TODO: ask other's opinion about this.
+        try {
+            ColumnType.valueOf(string);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+
+
     }
 }
