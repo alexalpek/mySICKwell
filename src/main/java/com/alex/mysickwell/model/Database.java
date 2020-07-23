@@ -16,4 +16,12 @@ public class Database {
     public void createTable(String tableName, HashMap<Column, LinkedList<?>> table) {
         tables.put(tableName, new Table(table));
     }
+
+    public Table getTable(String name) {
+        return tables.get(name);
+    }
+
+    public void setTable(String tableName, Table table) {
+        tables.put(tableName, table);
+    }
 }
