@@ -1,4 +1,4 @@
-package com.alex.mysickwell.createQueryUtils;
+package com.alex.mysickwell.QueryUtils;
 
 import com.alex.mysickwell.util.CreateQueryUtil;
 import org.junit.jupiter.api.Test;
