@@ -4,7 +4,9 @@ import com.alex.mysickwell.model.Column;
 import com.alex.mysickwell.model.ColumnType;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,7 +18,7 @@ public class CreateQueryUtil {
         return list[0].substring(queryStart.length()).trim();
     }
 
-    public HashMap<Column, LinkedList<?>> getTableColumnsFromQuery(String query) { //TODO: abstract factory maybe?
+    public HashMap<Column, LinkedList<?>> getTableColumnsFromQuery(String query) {
         String tableDataString = query.substring(0, query.length() - 2).split("\\(")[1];
         //age INTEGER, name VARCHAR
         String[] split = Arrays.stream(tableDataString.split(","))

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CreateTableHasSupportedParameters extends Middleware {
 
-    //TODO: refactor because of terrible time complexity
+    //TODO: refactor this to refer column type instead of standalone list.
     private List<String> acceptableParameters = new ArrayList<>(Arrays.asList("VARCHAR", "INTEGER", "BOOLEAN"));
 
     @Override
