@@ -1,13 +1,16 @@
 package com.alex.mysickwell.validation.create;
 
 import com.alex.mysickwell.model.Database;
-import com.alex.mysickwell.validation.QueryEndsProperly;
-import com.alex.mysickwell.validation.QueryProperStart;
 import com.alex.mysickwell.validation.Middleware;
+import com.alex.mysickwell.validation.QueryProperEnd;
+import com.alex.mysickwell.validation.QueryProperStart;
+import com.alex.mysickwell.validation.create.middleware.CreateTableHasParameters;
+import com.alex.mysickwell.validation.create.middleware.CreateTableHasSupportedParameters;
+import com.alex.mysickwell.validation.create.middleware.CreateTableName;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class CreateTableValidatorProvider {
 
     private final String CREATE_QUERY_START = "CREATE TABLE ";
@@ -19,7 +22,7 @@ public class CreateTableValidatorProvider {
     public CreateTableValidatorProvider(Database database) {
         this.middleware
                 .linkWith(new CreateTableName(database))
-                .linkWith(new QueryEndsProperly(CREATE_QUERY_END))
+                .linkWith(new QueryProperEnd(CREATE_QUERY_END))
                 .linkWith(new CreateTableHasParameters())
                 .linkWith(new CreateTableHasSupportedParameters());
     }

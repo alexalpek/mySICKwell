@@ -1,4 +1,4 @@
-package com.alex.mysickwell.validation.create;
+package com.alex.mysickwell.validation.create.middleware;
 
 import com.alex.mysickwell.validation.Middleware;
 

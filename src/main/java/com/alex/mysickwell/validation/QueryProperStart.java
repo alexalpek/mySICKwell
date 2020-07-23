@@ -1,6 +1,4 @@
 package com.alex.mysickwell.validation;
-
-import com.alex.mysickwell.validation.Middleware;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -10,11 +8,10 @@ public class QueryProperStart extends Middleware {
 
     @Override
     public boolean check(String query) {
-        String start = "CREATE TABLE ";
-        if (query == null || query.length() <= start.length()) return false;
+        if (query == null || query.length() <= startingString.length()) return false;
 
-        if (query.toUpperCase().startsWith(start)){
-            return checkNext(query.substring(start.length()));
+        if (query.toUpperCase().startsWith(startingString)) {
+            return checkNext(query.substring(startingString.length()));
         }
         return false;
     }
