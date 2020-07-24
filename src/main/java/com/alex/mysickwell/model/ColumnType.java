@@ -1,5 +1,7 @@
 package com.alex.mysickwell.model;
 
+import java.util.Arrays;
+
 public enum ColumnType {
 
     INTEGER(Integer.class), VARCHAR(String.class), BOOLEAN(Boolean.class);
@@ -18,14 +20,9 @@ public enum ColumnType {
         return ColumnType.valueOf(string);
     }
 
-    public static boolean allowedType(String string) { //TODO: ask other's opinion about this.
-        try {
-            ColumnType.valueOf(string);
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-        return true;
-
-
+    public static boolean allowedType(String string) {
+        return Arrays
+                .stream(ColumnType.values())
+                .anyMatch(columnType -> columnType.name().toUpperCase().equals(string));
     }
 }
