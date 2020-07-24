@@ -9,8 +9,6 @@ import com.alex.mysickwell.validation.insert.InsertValidatorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
@@ -32,17 +30,16 @@ public class InsertService {
         this.validator = provider.getMiddleware();
     }
 
-    public ResponseEntity<?> insertToTable(String query) {
+    public Integer insertToTable(String query) throws Exception {
         if (!validator.check(query)) {
             logger.info("Got malformed query: " + query);
-            return new ResponseEntity<>("Query is malformed.", HttpStatus.BAD_REQUEST);
+            throw new Exception();
         }
         String tableName = util.getTableNameFromQuery(query);
         return insertValuesFromQueryToTable(tableName, query);
-
     }
 
-    public ResponseEntity<?> insertValuesFromQueryToTable(String name, String query) {
+    public Integer insertValuesFromQueryToTable(String name, String query) throws Exception { //TODO: controlleradvice!!
         Table currentTable = database.getTable(name);
         String[] parametersString = util.getParametersFromQuery(query);
         try {
@@ -53,14 +50,22 @@ public class InsertService {
                 Map.Entry<Column, LinkedList<?>> pair = (Map.Entry) it.next();
                 Column column = pair.getKey();
                 Class<?> classOfColumn = column.getType().getDatatype();
-                LinkedList<?> dataEntries = pair.getValue();
-                //dataEntries.add(classOfColumn.cast(parametersString[index])); //TODO: capture of ? wildcard bug resolve.
+                LinkedList dataEntries = pair.getValue();
+
+                //addHelper(dataEntries, (classOfColumn.cast(parametersString[index])));
+                dataEntries.add(classOfColumn.cast(parametersString[index])); //TODO: capture of ? wildcard bug resolve.
+
                 index++;
             }
-            return new ResponseEntity<>("Query insertion was successful", HttpStatus.CREATED);
+            logger.info(currentTable.toString());
+            return parametersString.length;
         } catch (ClassCastException e) {
-            database.setTable(name, currentTable);
-            return new ResponseEntity<>("Parameter type mismatch" + e.getMessage(), HttpStatus.BAD_REQUEST);
+            database.setTable(name, currentTable); //TODO: memento pattern refactor BEFORE update and delete.
+            throw new Exception(); //TODO: own sqlexception and subclasses
         }
+    }
+
+    private <V> void addHelper(LinkedList<V> linkedList, V parameter) {
+        linkedList.add(parameter);
     }
 }
