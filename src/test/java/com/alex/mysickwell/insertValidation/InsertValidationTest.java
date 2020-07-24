@@ -101,7 +101,7 @@ public class InsertValidationTest {
 
         Mockito.when(database.getTables()).thenReturn(mockedMap);
         Mockito.when(database.getTable("table_name")).thenReturn(table);
-        Mockito.when(util.getParametersFromQuery("table_name (value1, value2, value3")).thenReturn(new String[]{"value1", "value2", "value3"});
+        Mockito.when(util.getParametersFromValidationString("table_name (value1, value2, value3")).thenReturn(new String[]{"value1", "value2", "value3"});
         assertTrue(validator.check(properString));
     }
 }
