@@ -26,7 +26,9 @@ public class InsertParametersAreSameNumber extends Middleware {
             System.out.println(this.getClass().getSimpleName() + " returned fail for database being null");
             return false;
         }
-        if (table.getData().size() == util.getParametersFromValidationString(query).length) {
+        int dataSize = table.getData().size();
+        int parametersSize = util.getParametersFromValidationString(query).length;
+        if (dataSize == parametersSize) {
             return checkNext(query);
         }
         System.out.println(this.getClass().getSimpleName() + " returned fail for query: " + query);
