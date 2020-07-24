@@ -7,6 +7,7 @@ import java.util.Arrays;
 public class InsertHasParameters extends Middleware {
     @Override
     public boolean check(String query) {
+        System.out.println(this.getClass().getSimpleName() + ": " + query);
         String[] array = query.split("\\(");
         if (array.length != 2) return false;
         String parameters = array[1].trim();
@@ -16,7 +17,7 @@ public class InsertHasParameters extends Middleware {
                 .allMatch(a -> a.length == 1)) {
             return checkNext(query);
         }
-        System.out.println(this.getClass().getSimpleName() + " returned fail");
+        System.out.println(this.getClass().getSimpleName() + " returned fail for query: " + query);
         return false;
     }
 }

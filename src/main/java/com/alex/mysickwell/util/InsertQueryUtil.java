@@ -13,10 +13,17 @@ public class InsertQueryUtil {
         return list[0].substring(queryStart.length()).trim();
     }
 
-    public String[] getParametersFromQuery(String query) {
-        String parametersWithBrackets = query.split(" VALUES")[1].trim();
+    public String[] getParametersFromValidationString(String query) {
+        String parametersWithBrackets = query.split("\\(")[1].trim();
         String[] split = parametersWithBrackets
-                .substring(1, parametersWithBrackets.length() - 2)
+                .split(",");
+        return Arrays.stream(split).map(String::trim).toArray(String[]::new);
+    }
+
+    public String[] getParametersFromQuery(String query) {
+        String parametersWithBrackets = query.split("\\(")[1].trim();
+        String[] split = parametersWithBrackets
+                .substring(0, parametersWithBrackets.length() - 2)
                 .split(",");
         return Arrays.stream(split).map(String::trim).toArray(String[]::new);
     }

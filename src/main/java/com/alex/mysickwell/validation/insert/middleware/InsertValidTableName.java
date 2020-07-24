@@ -4,6 +4,8 @@ import com.alex.mysickwell.model.Database;
 import com.alex.mysickwell.validation.Middleware;
 import lombok.AllArgsConstructor;
 
+import java.util.Arrays;
+
 @AllArgsConstructor
 public class InsertValidTableName extends Middleware {
 
@@ -11,12 +13,17 @@ public class InsertValidTableName extends Middleware {
 
     @Override
     public boolean check(String query) {
+        System.out.println(this.getClass().getSimpleName() + ": " + query);
         String[] split = query.split(" VALUES");
         if (split.length < 2) return false;
         if (database.getTables().containsKey(split[0])) {
-            return checkNext(split[1].trim());
+            String[] result = Arrays
+                    .stream(split)
+                    .map(String::trim)
+                    .toArray(String[]::new);
+            return checkNext(String.join(" ", result));
         }
-        System.out.println(this.getClass().getSimpleName() + " returned fail");
+        System.out.println(this.getClass().getSimpleName() + " returned fail for query: " + query);
         return false;
     }
 
