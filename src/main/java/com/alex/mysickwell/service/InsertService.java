@@ -53,7 +53,7 @@ public class InsertService {
                 LinkedList dataEntries = pair.getValue();
 
                 //addHelper(dataEntries, (classOfColumn.cast(parametersString[index])));
-                dataEntries.add(classOfColumn.cast(parametersString[index])); //TODO: capture of ? wildcard bug resolve.
+                dataEntries.add(classOfColumn.cast(parametersString[index])); //TODO: casting string to integer still not good.
 
                 index++;
             }
