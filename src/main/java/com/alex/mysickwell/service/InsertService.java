@@ -51,9 +51,10 @@ public class InsertService {
                 Column column = pair.getKey();
                 Class<?> classOfColumn = column.getType().getDatatype();
                 LinkedList dataEntries = pair.getValue();
+                String valueString = parametersString[index];
 
-                //addHelper(dataEntries, (classOfColumn.cast(parametersString[index])));
-                dataEntries.add(classOfColumn.cast(parametersString[index])); //TODO: capture of ? wildcard bug resolve.
+                addHelper(dataEntries, util.makeParameterFromString(valueString, classOfColumn)); //TODO: Hashmap causes "random" order, so only half the time works... LinkedHashMap?
+                //dataEntries.add(classOfColumn.cast(parametersString[index]));
 
                 index++;
             }

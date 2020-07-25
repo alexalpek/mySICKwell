@@ -27,4 +27,17 @@ public class InsertQueryUtil {
                 .split(",");
         return Arrays.stream(split).map(String::trim).toArray(String[]::new);
     }
+
+    public <T> T makeParameterFromString(String valueString, Class<?> classOfColumn) throws Exception {
+        if (classOfColumn == Integer.class) {
+            return (T) Integer.valueOf(valueString);
+        } else if (classOfColumn == Boolean.class) {
+            return (T) Boolean.valueOf(valueString);
+        } else if (classOfColumn == String.class) {
+            return (T) valueString;
+        } else {
+            throw new Exception();
+        }
+
+    }
 }
