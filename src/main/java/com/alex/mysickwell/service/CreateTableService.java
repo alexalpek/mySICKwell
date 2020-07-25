@@ -26,16 +26,15 @@ public class CreateTableService {
     private final Middleware validator;
 
 
-    public ResponseEntity<?> createTable(String query) {
+    public void createTable(String query) throws Exception {
         if (!validator.check(query)) {
             logger.info("Got malformed query: " + query);
-            return new ResponseEntity<>("Query is malformed.", HttpStatus.BAD_REQUEST);
+            throw new Exception();
         }
         String tableName = util.getTableNameFromQuery(query);
         HashMap<Column, LinkedList<?>> table = util.getTableColumnsFromQuery(query);
         database.createTable(tableName, table);
         logger.info("Table created with name of " + tableName + " with data of " + table);
-        return new ResponseEntity<>("Table created with name of " + tableName, HttpStatus.OK);
     }
 
     @Autowired
