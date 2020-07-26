@@ -11,6 +11,7 @@ public class Column {
 
     private String name;
     private ColumnType type;
-    private boolean notNull;
+    @Builder.Default
+    private boolean notNull = false;
 
 }
