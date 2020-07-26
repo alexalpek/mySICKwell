@@ -16,7 +16,7 @@ public class CreateTableName extends Middleware {
     public boolean check(String query) throws MySickWellException {
         String[] list = query.trim().split("\\(");
         if (list.length < 2 || query.startsWith("(") || list[0].equals(""))
-            throw new QueryHasNoTableNameException("Query has not table name provided!");
+            throw new QueryHasNoTableNameException();
         if (!database.getTables().containsKey(list[0])){
             return checkNext(query);
         }

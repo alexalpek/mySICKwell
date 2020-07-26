@@ -16,9 +16,8 @@ public class InsertValidTableName extends Middleware {
 
     @Override
     public boolean check(String query) throws MySickWellException {
-        System.out.println(this.getClass().getSimpleName() + ": " + query);
         String[] split = query.split(" VALUES");
-        if (split.length < 2) throw new QueryHasNoTableNameException("Query has no table name: " + query);
+        if (split.length < 2) throw new QueryHasNoTableNameException();
         if (database.getTables().containsKey(split[0])) {
             String[] result = Arrays
                     .stream(split)
@@ -26,8 +25,7 @@ public class InsertValidTableName extends Middleware {
                     .toArray(String[]::new);
             return checkNext(String.join(" ", result));
         }
-        System.out.println(this.getClass().getSimpleName() + " returned fail for query: " + query);
-        throw new TableDoesNotExistException("Table does not exist: " + split[0]);
+        throw new TableDoesNotExistException(split[0]);
     }
 
 

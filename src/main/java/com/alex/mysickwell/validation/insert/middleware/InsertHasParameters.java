@@ -9,10 +9,9 @@ import java.util.Arrays;
 public class InsertHasParameters extends Middleware {
     @Override
     public boolean check(String query) throws MySickWellException {
-        System.out.println(this.getClass().getSimpleName() + ": " + query);
         String[] array = query.split("\\(");
         if (array.length != 2)
-            throw new QueryHasMalformedParametersException("Query has malformed parameters: " + query);
+            throw new QueryHasMalformedParametersException();
         String parameters = array[1].trim();
         if (Arrays.stream(parameters.split(","))
                 .map(String::trim)
@@ -20,7 +19,6 @@ public class InsertHasParameters extends Middleware {
                 .allMatch(a -> a.length == 1)) {
             return checkNext(query);
         }
-        System.out.println(this.getClass().getSimpleName() + " returned fail for query: " + query);
-        throw new QueryHasMalformedParametersException("Query has malformed parameters: " + query);
+        throw new QueryHasMalformedParametersException();
     }
 }

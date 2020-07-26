@@ -11,7 +11,7 @@ public class CreateTableHasParameters extends Middleware {
     @Override
     public boolean check(String query) throws MySickWellException {
         String[] array = query.split("\\(");
-        if (array.length != 2) throw new QueryHasMalformedParametersException("Create query has malformed parameters: " + query);
+        if (array.length != 2) throw new QueryHasMalformedParametersException();
         String remaining = array[1];
         if (Arrays.stream(remaining.split(","))
                 .map(String::trim)
@@ -20,7 +20,7 @@ public class CreateTableHasParameters extends Middleware {
             return checkNext(query);
         }
 
-        throw new QueryHasMalformedParametersException("Create query has malformed parameters: " + query);
+        throw new QueryHasMalformedParametersException();
     }
 
 

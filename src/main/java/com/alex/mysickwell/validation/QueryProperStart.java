@@ -10,13 +10,11 @@ public class QueryProperStart extends Middleware {
 
     @Override
     public boolean check(String query) throws MySickWellException {
-        System.out.println(this.getClass().getSimpleName() + ": " + query);
         if (query == null || query.length() <= startingString.length()) throw new IllegalQueryStartException("Illegal start of query: " + query);
 
         if (query.toUpperCase().startsWith(startingString)) {
             return checkNext(query.substring(startingString.length()));
         }
-        System.out.println(this.getClass().getSimpleName() + " returned fail for query: " + query);
         throw new IllegalQueryStartException("Illegal start of query: " + query);
     }
 }

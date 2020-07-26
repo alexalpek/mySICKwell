@@ -41,7 +41,7 @@ public class InsertQueryUtil {
             } else {
                 throw new IllegalParametersInQueryException("Illegal parameter in query at: " + valueString + ". Expected type was " + classOfColumn.getSimpleName());
             }
-        } catch (ClassCastException e) {
+        } catch (ClassCastException | NumberFormatException e) {
             throw new IllegalParametersInQueryException("Illegal parameter in query at: " + valueString + ". Expected type was " + classOfColumn.getSimpleName());
         }
     }

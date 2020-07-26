@@ -21,20 +21,18 @@ public class InsertParametersAreSameNumber extends Middleware {
 
     @Override
     public boolean check(String query) throws MySickWellException {
-        System.out.println(this.getClass().getSimpleName() + ": " + query);
         String[] data = query.split(" \\(");
         String tableName = data[0];
         Table table = database.getTable(tableName);
         if (table == null) {
             System.out.println(this.getClass().getSimpleName() + " returned fail for database being null");
-            throw new TableDoesNotExistException("Requested table does not exists: " + tableName);
+            throw new TableDoesNotExistException(tableName);
         }
         int dataSize = table.getData().size();
         int parametersSize = util.getParametersFromValidationString(query).length;
         if (dataSize == parametersSize) {
             return checkNext(query);
         }
-        System.out.println(this.getClass().getSimpleName() + " returned fail for query: " + query);
         throw new IllegalParametersInQueryException("Parameters number are not equal to column number!\nRequired: " + dataSize + " Provided: " + parametersSize);
     }
 }

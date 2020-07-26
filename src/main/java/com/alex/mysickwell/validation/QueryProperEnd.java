@@ -11,11 +11,9 @@ public class QueryProperEnd extends Middleware {
 
     @Override
     public boolean check(String query) throws MySickWellException {
-        System.out.println(this.getClass().getSimpleName() + ": " + query);
         if (query.endsWith(endingString)) {
             return checkNext(query.substring(0, query.length() - 2));
         }
-        System.out.println(this.getClass().getSimpleName() + " returned fail for query: " + query);
-        throw new IllegalEndOfQueryException("Query is not ending with: " + endingString);
+        throw new IllegalEndOfQueryException(endingString);
     }
 }

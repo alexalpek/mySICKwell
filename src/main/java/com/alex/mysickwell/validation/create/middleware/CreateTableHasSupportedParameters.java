@@ -6,16 +6,14 @@ import com.alex.mysickwell.controller.advice.exception.QueryHasMalformedParamete
 import com.alex.mysickwell.model.ColumnType;
 import com.alex.mysickwell.validation.Middleware;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class CreateTableHasSupportedParameters extends Middleware {
 
     @Override
     public boolean check(String query) throws MySickWellException {
         String[] split = query.split("\\(");
-        if (split.length < 2) throw new QueryHasMalformedParametersException("Query has malformed parameters:" + query);
+        if (split.length < 2) throw new QueryHasMalformedParametersException();
         String[][] arrayOfArrays = Arrays.stream(split[1].split(","))
                 .map(String::trim)
                 .map(p -> p.split(" "))

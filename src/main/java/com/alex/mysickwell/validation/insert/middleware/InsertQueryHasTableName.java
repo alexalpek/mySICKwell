@@ -18,16 +18,14 @@ public class InsertQueryHasTableName extends Middleware {
 
     @Override
     public boolean check(String query) throws MySickWellException {
-        System.out.println(this.getClass().getSimpleName() + ": " + query);
         String[] split = query.split("\\s(?i)VALUES\\s");
-        if (split.length < 2) throw new QueryHasNoTableNameException("Insert query has no table name in it: " + query);
+        if (split.length < 2) throw new QueryHasNoTableNameException();
         //Trim check is to prevent names with multiple whitespace.
         String tableName = split[0].trim();
         if (!tableName.equals("")) {
             return checkNext(query);
         }
-        System.out.println(this.getClass().getSimpleName() + " returned fail for query: " + query);
-        throw new QueryHasNoTableNameException("Insert query has no table name in it: " + query);
+        throw new QueryHasNoTableNameException();
     }
 
 }
