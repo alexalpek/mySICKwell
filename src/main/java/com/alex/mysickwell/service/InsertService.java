@@ -1,6 +1,5 @@
 package com.alex.mysickwell.service;
 
-import com.alex.mysickwell.controller.advice.exception.IllegalParametersInQueryException;
 import com.alex.mysickwell.controller.advice.exception.MySickWellException;
 import com.alex.mysickwell.model.Column;
 import com.alex.mysickwell.model.Database;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -43,34 +41,23 @@ public class InsertService {
 
     public Integer insertValuesFromQueryToTable(String name, String query) throws MySickWellException {
         Table currentTable = database.getTable(name);
-
-        //TODO: implement failsafe. Columns still refers to the same memory place. cloning?
-        Map<Column, LinkedList<?>> newData = new HashMap<>(currentTable.getData());
-        Table tableBeforeChange = new Table(newData);
-
         String[] parametersString = util.getParametersFromQuery(query);
-        try {
-            Map<Column, LinkedList<?>> data = currentTable.getData();
-            Iterator it = data.entrySet().iterator();
-            int index = 0;
-            while (it.hasNext()) {
-                Boolean asd = currentTable.equals(tableBeforeChange);
-                Map.Entry<Column, LinkedList<?>> pair = (Map.Entry) it.next();
+        Map<Column, LinkedList<?>> data = currentTable.getData();
+        Iterator it = data.entrySet().iterator();
+        int index = 0;
+        while (it.hasNext()) {
+            Map.Entry<Column, LinkedList<?>> pair = (Map.Entry) it.next();
 
-                Column column = pair.getKey();
-                LinkedList dataEntries = pair.getValue();
-                Class<?> classOfColumn = column.getType().getDatatype();
+            Column column = pair.getKey();
+            LinkedList dataEntries = pair.getValue();
+            Class<?> classOfColumn = column.getType().getDatatype();
 
-                String valueString = parametersString[index];
-                addHelper(dataEntries, util.makeParameterFromString(valueString, classOfColumn));
-                index++;
-            }
-            logger.info(currentTable.toString());
-            return parametersString.length;
-        } catch (IllegalParametersInQueryException e) {
-            database.setTable(name, tableBeforeChange); //TODO: memento pattern refactor BEFORE update and delete.
-            throw new IllegalParametersInQueryException(e.getMessage());
+            String valueString = parametersString[index];
+            addHelper(dataEntries, util.makeParameterFromString(valueString, classOfColumn));
+            index++;
         }
+        logger.info(currentTable.toString());
+        return parametersString.length;
     }
 
     public <V> void addHelper(LinkedList<V> linkedList, V parameter) {
