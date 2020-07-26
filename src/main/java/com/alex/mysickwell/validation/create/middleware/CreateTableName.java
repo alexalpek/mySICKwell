@@ -1,5 +1,8 @@
 package com.alex.mysickwell.validation.create.middleware;
 
+import com.alex.mysickwell.controller.advice.exception.MySickWellException;
+import com.alex.mysickwell.controller.advice.exception.QueryHasNoTableNameException;
+import com.alex.mysickwell.controller.advice.exception.TableAlreadyExistsException;
 import com.alex.mysickwell.model.Database;
 import com.alex.mysickwell.validation.Middleware;
 import lombok.AllArgsConstructor;
@@ -10,12 +13,13 @@ public class CreateTableName extends Middleware {
     private final Database database;
 
     @Override
-    public boolean check(String query) {
+    public boolean check(String query) throws MySickWellException {
         String[] list = query.trim().split("\\(");
-        if (list.length < 2 || query.startsWith("(") || list[0].equals("")) return false;
+        if (list.length < 2 || query.startsWith("(") || list[0].equals(""))
+            throw new QueryHasNoTableNameException("Query has not table name provided!");
         if (!database.getTables().containsKey(list[0])){
             return checkNext(query);
         }
-        return false;
+        throw new TableAlreadyExistsException("Table already exists: " + list[0]);
     }
 }

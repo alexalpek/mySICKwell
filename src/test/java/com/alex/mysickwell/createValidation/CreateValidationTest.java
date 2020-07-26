@@ -1,5 +1,6 @@
 package com.alex.mysickwell.createValidation;
 
+import com.alex.mysickwell.controller.advice.exception.*;
 import com.alex.mysickwell.model.Database;
 import com.alex.mysickwell.validation.Middleware;
 import com.alex.mysickwell.validation.create.CreateTableValidatorProvider;
@@ -10,8 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class CreateValidationTest {
@@ -40,7 +40,7 @@ public class CreateValidationTest {
     }
 
     @Test
-    void createTableParametersMiddlewareWorks() {
+    void createTableParametersMiddlewareWorks() throws MySickWellException {
         Middleware middleware = new CreateTableHasParameters();
         String query = "CREATE TABLE asd (kek VARCHAR, lol BOOLEAN, asd INTEGER";
         assertTrue(middleware.check(query));
@@ -48,54 +48,55 @@ public class CreateValidationTest {
 
 
     @Test
-    void createTableNameWorks() {
+    void createTableNameWorks() throws MySickWellException {
         Middleware middleware = new CreateTableName(database);
         assertTrue(middleware.check(query3));
     }
 
     @Test
     void emptyStringFails() {
-        assertFalse(validator.check(query1));
+        assertThrows(IllegalQueryStartException.class, () -> validator.check(query1));
     }
 
     @Test
     void nullFails() {
-        assertFalse(validator.check(query2));
+        assertThrows(IllegalQueryStartException.class, () -> validator.check(query2));
     }
 
     @Test
-    void properQueryPasses() {
+    void properQueryPasses() throws MySickWellException {
         assertTrue(validator.check(query3));
     }
 
     @Test
     void allQueryParametersHasToHaveTwoParts() {
-        assertFalse(validator.check(query4));
+        assertThrows(QueryHasMalformedParametersException.class, () -> validator.check(query4));
+
     }
 
     @Test
-    void tableNameHasToBeThere() {
-        assertFalse(validator.check(query5));
+    void tableNameHasToBeThere(){
+        assertThrows(QueryHasNoTableNameException.class, () -> validator.check(query5));
     }
 
     @Test
-    void multipleBracketsFails() {
-        assertFalse(validator.check(query6));
+    void multipleBracketsFails(){
+        assertThrows(QueryHasNoTableNameException.class, () -> validator.check(query6));
     }
 
     @Test
     void noParametersFails() {
-        assertFalse(validator.check(query7));
+        assertThrows(IllegalQueryStartException.class, () -> validator.check(query7));
     }
 
     @Test
     void fanniTriesToBreakItButFailsHopefully() {
-        assertFalse(validator.check(fanniQuery));
+        assertThrows(MySickWellException.class, () -> validator.check(fanniQuery));
     }
 
     @Test
-    void notSupportedQueryParameterTypeFails() {
-        assertFalse(validator.check(query9));
+    void notSupportedQueryParameterTypeFails(){
+        assertThrows(IllegalParametersInQueryException.class, () -> validator.check(query9));
     }
 
 }

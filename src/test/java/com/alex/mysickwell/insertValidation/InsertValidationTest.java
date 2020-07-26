@@ -1,5 +1,8 @@
 package com.alex.mysickwell.insertValidation;
 
+import com.alex.mysickwell.controller.advice.exception.IllegalQueryStartException;
+import com.alex.mysickwell.controller.advice.exception.MySickWellException;
+import com.alex.mysickwell.controller.advice.exception.QueryHasMalformedParametersException;
 import com.alex.mysickwell.model.Column;
 import com.alex.mysickwell.model.ColumnType;
 import com.alex.mysickwell.model.Database;
@@ -18,13 +21,9 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class InsertValidationTest {
@@ -49,16 +48,16 @@ public class InsertValidationTest {
     @Test
     void emptyStringFails() {
         String emptyString = "";
-        assertFalse(validator.check(emptyString));
+        assertThrows(IllegalQueryStartException.class, () -> validator.check(emptyString));
     }
 
     @Test
     void nullFails() {
-        assertFalse(validator.check(null));
+        assertThrows(IllegalQueryStartException.class, () -> validator.check(null));
     }
 
     @Test
-    void InsertHasParametersMiddlewareWorks() {
+    void InsertHasParametersMiddlewareWorks() throws MySickWellException {
         Middleware middleware = new InsertHasParameters();
         assertTrue(middleware.check(properString));
     }
@@ -66,12 +65,22 @@ public class InsertValidationTest {
     @Test
     void InsertHasParametersMiddlewareDetectsIfParameterIsNotOneWord() {
         Middleware middleware = new InsertHasParameters();
+
         String query = "INSERT INTO table_name VALUES (value1 INTEGER, value2, value3);";
-        assertFalse(middleware.check(query));
+        assertThrows(QueryHasMalformedParametersException.class, () -> middleware.check(query));
     }
 
     @Test
-    void InsertQueryHasTableNameWorks() {
+    void validatorDetectsIfParameterIsNotOneWord() {
+        Map<String, Table> returnedMap = new LinkedHashMap<>();
+        returnedMap.put("table_name", null);
+        Mockito.when(database.getTables()).thenReturn(returnedMap);
+        String query = "INSERT INTO table_name VALUES (value1 INTEGER, value2, value3);";
+        assertThrows(QueryHasMalformedParametersException.class, () -> validator.check(query));
+    }
+
+    @Test
+    void InsertQueryHasTableNameWorks() throws MySickWellException {
         Middleware middleware = new InsertQueryHasTableName();
         String start = "INSERT INTO ";
         assertTrue(middleware.check(properString.substring(start.length(),
@@ -79,7 +88,7 @@ public class InsertValidationTest {
     }
 
     @Test
-    void validatorWorksOnProperString() {
+    void validatorWorksOnProperString() throws MySickWellException {
         HashMap<Column, LinkedList<?>> columnLinkedListHashMap = new HashMap<>();
         columnLinkedListHashMap.put(Column.builder()
                 .type(ColumnType.VARCHAR)
