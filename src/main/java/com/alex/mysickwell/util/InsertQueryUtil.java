@@ -1,5 +1,7 @@
 package com.alex.mysickwell.util;
 
+import com.alex.mysickwell.controller.advice.exception.IllegalParametersInQueryException;
+import com.alex.mysickwell.controller.advice.exception.MySickWellException;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -28,16 +30,19 @@ public class InsertQueryUtil {
         return Arrays.stream(split).map(String::trim).toArray(String[]::new);
     }
 
-    public <T> T makeParameterFromString(String valueString, Class<?> classOfColumn) throws Exception {
-        if (classOfColumn == Integer.class) {
-            return (T) Integer.valueOf(valueString);
-        } else if (classOfColumn == Boolean.class) {
-            return (T) Boolean.valueOf(valueString);
-        } else if (classOfColumn == String.class) {
-            return (T) valueString;
-        } else {
-            throw new Exception();
+    public <T> T makeParameterFromString(String valueString, Class<?> classOfColumn) throws MySickWellException {
+        try {
+            if (classOfColumn == Integer.class) {
+                return (T) Integer.valueOf(valueString);
+            } else if (classOfColumn == Boolean.class) {
+                return (T) Boolean.valueOf(valueString);
+            } else if (classOfColumn == String.class) {
+                return (T) valueString;
+            } else {
+                throw new IllegalParametersInQueryException("Illegal parameter in query at: " + valueString + ". Expected type was " + classOfColumn.getSimpleName());
+            }
+        } catch (ClassCastException e) {
+            throw new IllegalParametersInQueryException("Illegal parameter in query at: " + valueString + ". Expected type was " + classOfColumn.getSimpleName());
         }
-
     }
 }

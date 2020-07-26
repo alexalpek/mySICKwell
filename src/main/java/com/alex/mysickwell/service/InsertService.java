@@ -1,5 +1,7 @@
 package com.alex.mysickwell.service;
 
+import com.alex.mysickwell.controller.advice.exception.IllegalParametersInQueryException;
+import com.alex.mysickwell.controller.advice.exception.MySickWellException;
 import com.alex.mysickwell.model.Column;
 import com.alex.mysickwell.model.Database;
 import com.alex.mysickwell.model.Table;
@@ -39,7 +41,7 @@ public class InsertService {
         return insertValuesFromQueryToTable(tableName, query);
     }
 
-    public Integer insertValuesFromQueryToTable(String name, String query) throws Exception { //TODO: controlleradvice!!
+    public Integer insertValuesFromQueryToTable(String name, String query) throws MySickWellException {
         Table currentTable = database.getTable(name);
         String[] parametersString = util.getParametersFromQuery(query);
         try {
@@ -52,17 +54,14 @@ public class InsertService {
                 Class<?> classOfColumn = column.getType().getDatatype();
                 LinkedList dataEntries = pair.getValue();
                 String valueString = parametersString[index];
-
-                addHelper(dataEntries, util.makeParameterFromString(valueString, classOfColumn)); //TODO: Hashmap causes "random" order, so only half the time works... LinkedHashMap?
-                //dataEntries.add(classOfColumn.cast(parametersString[index]));
-
+                addHelper(dataEntries, util.makeParameterFromString(valueString, classOfColumn));
                 index++;
             }
             logger.info(currentTable.toString());
             return parametersString.length;
-        } catch (ClassCastException e) {
+        } catch (IllegalParametersInQueryException e) {
             database.setTable(name, currentTable); //TODO: memento pattern refactor BEFORE update and delete.
-            throw new Exception(); //TODO: own sqlexception and subclasses
+            throw new IllegalParametersInQueryException(e.getMessage());
         }
     }
 
