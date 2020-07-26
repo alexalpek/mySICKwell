@@ -30,7 +30,7 @@ public class InsertQueryUtil {
         return Arrays.stream(split).map(String::trim).toArray(String[]::new);
     }
 
-    public <T> T makeParameterFromString(String valueString, Class<?> classOfColumn) throws MySickWellException {
+    public <T> T makeParameterFromString(String valueString, Class<?> classOfColumn) throws MySickWellException { //TODO: find better way
         try {
             if (classOfColumn == Integer.class) {
                 return (T) Integer.valueOf(valueString);
