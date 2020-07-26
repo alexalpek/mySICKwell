@@ -11,10 +11,7 @@ import com.alex.mysickwell.util.InsertQueryUtil;
 import com.alex.mysickwell.validation.Middleware;
 import com.alex.mysickwell.validation.QueryProperEnd;
 import com.alex.mysickwell.validation.QueryProperStart;
-import com.alex.mysickwell.validation.insert.middleware.InsertHasParameters;
-import com.alex.mysickwell.validation.insert.middleware.InsertParametersAreSameNumber;
-import com.alex.mysickwell.validation.insert.middleware.InsertQueryHasTableName;
-import com.alex.mysickwell.validation.insert.middleware.InsertValidTableName;
+import com.alex.mysickwell.validation.insert.middleware.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,7 +20,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class InsertValidationTest {
@@ -42,7 +40,8 @@ public class InsertValidationTest {
                 .linkWith(new InsertValidTableName(database))
                 .linkWith(new QueryProperEnd(");"))
                 .linkWith(new InsertHasParameters())
-                .linkWith(new InsertParametersAreSameNumber(database, util));
+                .linkWith(new InsertParametersAreSameNumber(database, util))
+                .linkWith(new InsertParametersHasTheRightDataType(database, util));
     }
 
     @Test
@@ -111,6 +110,9 @@ public class InsertValidationTest {
         Mockito.when(database.getTables()).thenReturn(mockedMap);
         Mockito.when(database.getTable("table_name")).thenReturn(table);
         Mockito.when(util.getParametersFromValidationString("table_name (value1, value2, value3")).thenReturn(new String[]{"value1", "value2", "value3"});
+        Mockito.when(util.makeParameterFromString("value1", String.class)).thenReturn("value1");
+        Mockito.when(util.makeParameterFromString("value2", String.class)).thenReturn("value2");
+        Mockito.when(util.makeParameterFromString("value3", String.class)).thenReturn("value3");
         assertTrue(validator.check(properString));
     }
 }
