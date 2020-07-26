@@ -23,6 +23,6 @@ public enum ColumnType {
     public static boolean allowedType(String string) {
         return Arrays
                 .stream(ColumnType.values())
-                .anyMatch(columnType -> columnType.name().toUpperCase().equals(string));
+                .anyMatch(columnType -> columnType.name().equals(string.toUpperCase()));
     }
 }
