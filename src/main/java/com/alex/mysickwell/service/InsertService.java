@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -32,27 +33,34 @@ public class InsertService {
         this.validator = provider.getMiddleware();
     }
 
-    public Integer insertToTable(String query) throws Exception {
-        if (!validator.check(query)) {
-            logger.info("Got malformed query: " + query);
-            throw new Exception();
+    public Integer insertToTable(String query) throws MySickWellException {
+        if (validator.check(query)) {
+            String tableName = util.getTableNameFromQuery(query);
+            return insertValuesFromQueryToTable(tableName, query);
         }
-        String tableName = util.getTableNameFromQuery(query);
-        return insertValuesFromQueryToTable(tableName, query);
+        return 0;
     }
 
     public Integer insertValuesFromQueryToTable(String name, String query) throws MySickWellException {
         Table currentTable = database.getTable(name);
+
+        //TODO: implement failsafe. Columns still refers to the same memory place. cloning?
+        Map<Column, LinkedList<?>> newData = new HashMap<>(currentTable.getData());
+        Table tableBeforeChange = new Table(newData);
+
         String[] parametersString = util.getParametersFromQuery(query);
         try {
             Map<Column, LinkedList<?>> data = currentTable.getData();
             Iterator it = data.entrySet().iterator();
             int index = 0;
             while (it.hasNext()) {
+                Boolean asd = currentTable.equals(tableBeforeChange);
                 Map.Entry<Column, LinkedList<?>> pair = (Map.Entry) it.next();
+
                 Column column = pair.getKey();
-                Class<?> classOfColumn = column.getType().getDatatype();
                 LinkedList dataEntries = pair.getValue();
+                Class<?> classOfColumn = column.getType().getDatatype();
+
                 String valueString = parametersString[index];
                 addHelper(dataEntries, util.makeParameterFromString(valueString, classOfColumn));
                 index++;
@@ -60,12 +68,12 @@ public class InsertService {
             logger.info(currentTable.toString());
             return parametersString.length;
         } catch (IllegalParametersInQueryException e) {
-            database.setTable(name, currentTable); //TODO: memento pattern refactor BEFORE update and delete.
+            database.setTable(name, tableBeforeChange); //TODO: memento pattern refactor BEFORE update and delete.
             throw new IllegalParametersInQueryException(e.getMessage());
         }
     }
 
-    private <V> void addHelper(LinkedList<V> linkedList, V parameter) {
+    public <V> void addHelper(LinkedList<V> linkedList, V parameter) {
         linkedList.add(parameter);
     }
 }
