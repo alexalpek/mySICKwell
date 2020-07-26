@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
@@ -18,20 +19,20 @@ public class CreateQueryUtil {
         return list[0].substring(queryStart.length()).trim();
     }
 
-    public HashMap<Column, LinkedList<?>> getTableColumnsFromQuery(String query) {
+    public LinkedHashMap<Column, LinkedList<?>> getTableColumnsFromQuery(String query) {
         String tableDataString = query.substring(0, query.length() - 2).split("\\(")[1];
         //age INTEGER, name VARCHAR
         String[] split = Arrays.stream(tableDataString.split(","))
                 .map(String::trim)
                 .toArray(String[]::new);
-        HashMap<Column, LinkedList<?>> tableRepresentation = Arrays.stream(split).map(x -> {
+        LinkedHashMap<Column, LinkedList<?>> tableRepresentation = Arrays.stream(split).map(x -> {
             String[] columnDataString = x.split(" ");
             return Column.builder()
                     .type(ColumnType.getTypeByString(columnDataString[1]))
                     .name(columnDataString[0])
                     .notNull(false)
                     .build();
-        }).collect(Collectors.toMap(column -> column, column -> new LinkedList<>(), (prev, next) -> next, HashMap::new));
+        }).collect(Collectors.toMap(column -> column, column -> new LinkedList<>(), (prev, next) -> next, LinkedHashMap::new));
         return tableRepresentation;
     }
 }

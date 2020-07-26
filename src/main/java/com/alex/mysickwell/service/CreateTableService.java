@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 @Slf4j
@@ -32,7 +33,7 @@ public class CreateTableService {
             throw new Exception();
         }
         String tableName = util.getTableNameFromQuery(query);
-        HashMap<Column, LinkedList<?>> table = util.getTableColumnsFromQuery(query);
+        LinkedHashMap<Column, LinkedList<?>> table = util.getTableColumnsFromQuery(query);
         database.createTable(tableName, table);
         logger.info("Table created with name of " + tableName + " with data of " + table);
     }
