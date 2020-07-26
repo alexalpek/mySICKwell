@@ -1,5 +1,6 @@
 package com.alex.mysickwell.service;
 
+import com.alex.mysickwell.controller.advice.exception.MySickWellException;
 import com.alex.mysickwell.model.Column;
 import com.alex.mysickwell.model.Database;
 import com.alex.mysickwell.util.CreateQueryUtil;
@@ -27,15 +28,13 @@ public class CreateTableService {
     private final Middleware validator;
 
 
-    public void createTable(String query) throws Exception {
-        if (!validator.check(query)) {
-            logger.info("Got malformed query: " + query);
-            throw new Exception();
-        }
+    public void createTable(String query) throws MySickWellException {
+        if (validator.check(query)) {
         String tableName = util.getTableNameFromQuery(query);
         LinkedHashMap<Column, LinkedList<?>> table = util.getTableColumnsFromQuery(query);
         database.createTable(tableName, table);
         logger.info("Table created with name of " + tableName + " with data of " + table);
+        }
     }
 
     @Autowired
