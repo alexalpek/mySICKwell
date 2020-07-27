@@ -1,7 +1,9 @@
 package com.alex.mysickwell.validation.insert.middleware;
 
+import com.alex.mysickwell.controller.advice.exception.IllegalParametersInQueryException;
 import com.alex.mysickwell.controller.advice.exception.MySickWellException;
 import com.alex.mysickwell.model.Column;
+import com.alex.mysickwell.model.ColumnType;
 import com.alex.mysickwell.model.Database;
 import com.alex.mysickwell.model.Table;
 import com.alex.mysickwell.util.InsertQueryUtil;
@@ -33,12 +35,14 @@ public class InsertParametersHasTheRightDataType extends Middleware {
             Map.Entry<Column, LinkedList<?>> pair = (Map.Entry) it.next();
 
             Column column = pair.getKey();
-            Class<?> classOfColumn = column.getType().getDatatype();
-
+            ColumnType classOfColumn = column.getType();
             String valueString = parametersString[index];
-
-            if (classOfColumn.equals(util.makeParameterFromString(valueString, classOfColumn).getClass())) {
-                index++;
+            try {
+                if (classOfColumn.getDatatype().equals(classOfColumn.convert(valueString).getClass())) {
+                    index++;
+                }
+            } catch (NumberFormatException e) {
+                throw new IllegalParametersInQueryException("Illegal parameter in query at: " + valueString + ". Expected type was " + classOfColumn.getDatatype().getSimpleName());
             }
         }
         return checkNext(query);

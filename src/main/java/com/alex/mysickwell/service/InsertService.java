@@ -2,6 +2,7 @@ package com.alex.mysickwell.service;
 
 import com.alex.mysickwell.controller.advice.exception.MySickWellException;
 import com.alex.mysickwell.model.Column;
+import com.alex.mysickwell.model.ColumnType;
 import com.alex.mysickwell.model.Database;
 import com.alex.mysickwell.model.Table;
 import com.alex.mysickwell.util.InsertQueryUtil;
@@ -50,7 +51,7 @@ public class InsertService {
 
             Column column = pair.getKey();
             LinkedList dataEntries = pair.getValue();
-            Class<?> classOfColumn = column.getType().getDatatype();
+            ColumnType classOfColumn = column.getType();
 
             String valueString = parametersString[index];
             addHelper(dataEntries, util.makeParameterFromString(valueString, classOfColumn));
