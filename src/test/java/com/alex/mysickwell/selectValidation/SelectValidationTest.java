@@ -32,7 +32,7 @@ public class SelectValidationTest {
     void selectHasTableNameThrowsErrorIfNoTableNameAndFromWordIsPresent() {
         Middleware middleware = new SelectHasTableName();
         String query = "SELECT * ";
-        assertThrows(QueryHasNoTableNameException.class, () -> middleware.check(query));
+        assertThrows(MySickWellException.class, () -> middleware.check(query));
     }
 
 
