@@ -22,7 +22,7 @@ Select from table with the syntax of:\
 
 
 ## Contributing
-Since the main goal of the project is to learn, it is only me:\
+It is only me:\
 Alex Alpek - [Github](https://github.com/alexalpek)
 
 ## License
