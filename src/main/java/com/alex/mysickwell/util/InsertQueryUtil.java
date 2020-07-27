@@ -20,7 +20,10 @@ public class InsertQueryUtil {
         String parametersWithBrackets = query.split("\\(")[1].trim();
         String[] split = parametersWithBrackets
                 .split(",");
-        return Arrays.stream(split).map(String::trim).toArray(String[]::new);
+        return Arrays
+                .stream(split)
+                .map(String::trim)
+                .toArray(String[]::new);
     }
 
     public String[] getParametersFromQuery(String query) {
@@ -28,7 +31,10 @@ public class InsertQueryUtil {
         String[] split = parametersWithBrackets
                 .substring(0, parametersWithBrackets.length() - 2)
                 .split(",");
-        return Arrays.stream(split).map(String::trim).toArray(String[]::new);
+        return Arrays
+                .stream(split)
+                .map(String::trim)
+                .toArray(String[]::new);
     }
 
     public <T> T makeParameterFromString(String valueString, ColumnType classOfColumn) throws MySickWellException { //TODO: find better way
