@@ -41,7 +41,7 @@ public class InsertParametersHasTheRightDataType extends Middleware {
                 if (classOfColumn.getDatatype().equals(classOfColumn.convert(valueString).getClass())) {
                     index++;
                 }
-            } catch (NumberFormatException e) {
+            } catch (IllegalArgumentException e) {
                 throw new IllegalParametersInQueryException("Illegal parameter in query at: " + valueString + ". Expected type was " + classOfColumn.getDatatype().getSimpleName());
             }
         }
