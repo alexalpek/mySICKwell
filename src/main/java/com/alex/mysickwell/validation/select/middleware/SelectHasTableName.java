@@ -15,7 +15,7 @@ public class SelectHasTableName extends Middleware {
                 .map(String::trim)
                 .toArray(String[]::new);
         if (queryParts.length < 2)
-            throw new QueryHasNoTableNameException();
+            throw new MySickWellException("Malformed query.");
         if (!queryParts[1].trim().equals("")) {
             return checkNext(query);
         }
