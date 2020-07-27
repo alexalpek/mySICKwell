@@ -1,5 +1,6 @@
 package com.alex.mysickwell.service;
 
+import com.alex.mysickwell.controller.advice.exception.MySickWellException;
 import com.alex.mysickwell.model.Column;
 import com.alex.mysickwell.model.Database;
 import com.alex.mysickwell.util.CreateQueryUtil;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 @Slf4j
@@ -26,16 +28,13 @@ public class CreateTableService {
     private final Middleware validator;
 
 
-    public ResponseEntity<?> createTable(String query) {
-        if (!validator.check(query)) {
-            logger.info("Got malformed query: " + query);
-            return new ResponseEntity<>("Query is malformed.", HttpStatus.BAD_REQUEST);
-        }
+    public void createTable(String query) throws MySickWellException {
+        if (validator.check(query)) {
         String tableName = util.getTableNameFromQuery(query);
-        HashMap<Column, LinkedList<?>> table = util.getTableColumnsFromQuery(query);
+        LinkedHashMap<Column, LinkedList<?>> table = util.getTableColumnsFromQuery(query);
         database.createTable(tableName, table);
         logger.info("Table created with name of " + tableName + " with data of " + table);
-        return new ResponseEntity<>("Table created with name of " + tableName, HttpStatus.OK);
+        }
     }
 
     @Autowired

@@ -1,5 +1,7 @@
 package com.alex.mysickwell.validation.insert.middleware;
 
+import com.alex.mysickwell.controller.advice.exception.MySickWellException;
+import com.alex.mysickwell.controller.advice.exception.QueryHasNoTableNameException;
 import com.alex.mysickwell.validation.Middleware;
 
 
@@ -15,17 +17,15 @@ public class InsertQueryHasTableName extends Middleware {
 
 
     @Override
-    public boolean check(String query) {
-        System.out.println(this.getClass().getSimpleName() + ": " + query);
+    public boolean check(String query) throws MySickWellException {
         String[] split = query.split("\\s(?i)VALUES\\s");
-        if (split.length < 2) return false;
+        if (split.length < 2) throw new QueryHasNoTableNameException();
         //Trim check is to prevent names with multiple whitespace.
         String tableName = split[0].trim();
         if (!tableName.equals("")) {
             return checkNext(query);
         }
-        System.out.println(this.getClass().getSimpleName() + " returned fail for query: " + query);
-        return false;
+        throw new QueryHasNoTableNameException();
     }
 
 }

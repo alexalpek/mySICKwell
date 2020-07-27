@@ -5,10 +5,7 @@ import com.alex.mysickwell.util.InsertQueryUtil;
 import com.alex.mysickwell.validation.Middleware;
 import com.alex.mysickwell.validation.QueryProperEnd;
 import com.alex.mysickwell.validation.QueryProperStart;
-import com.alex.mysickwell.validation.insert.middleware.InsertHasParameters;
-import com.alex.mysickwell.validation.insert.middleware.InsertParametersAreSameNumber;
-import com.alex.mysickwell.validation.insert.middleware.InsertQueryHasTableName;
-import com.alex.mysickwell.validation.insert.middleware.InsertValidTableName;
+import com.alex.mysickwell.validation.insert.middleware.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +24,8 @@ public class InsertValidatorProvider {
                 .linkWith(new InsertValidTableName(database))
                 .linkWith(new QueryProperEnd(INSERT_QUERY_END))
                 .linkWith(new InsertHasParameters())
-                .linkWith(new InsertParametersAreSameNumber(database, util));
+                .linkWith(new InsertParametersAreSameNumber(database, util))
+                .linkWith(new InsertParametersHasTheRightDataType(database, util));
     }
 
     public Middleware getMiddleware() {

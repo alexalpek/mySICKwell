@@ -1,6 +1,8 @@
 package com.alex.mysickwell.service;
 
+import com.alex.mysickwell.controller.advice.exception.MySickWellException;
 import com.alex.mysickwell.model.Column;
+import com.alex.mysickwell.model.ColumnType;
 import com.alex.mysickwell.model.Database;
 import com.alex.mysickwell.model.Table;
 import com.alex.mysickwell.util.InsertQueryUtil;
@@ -30,42 +32,36 @@ public class InsertService {
         this.validator = provider.getMiddleware();
     }
 
-    public Integer insertToTable(String query) throws Exception {
-        if (!validator.check(query)) {
-            logger.info("Got malformed query: " + query);
-            throw new Exception();
+    public Integer insertToTable(String query) throws MySickWellException {
+        if (validator.check(query)) {
+            String tableName = util.getTableNameFromQuery(query);
+            return insertValuesFromQueryToTable(tableName, query);
         }
-        String tableName = util.getTableNameFromQuery(query);
-        return insertValuesFromQueryToTable(tableName, query);
+        return 0;
     }
 
-    public Integer insertValuesFromQueryToTable(String name, String query) throws Exception { //TODO: controlleradvice!!
+    public Integer insertValuesFromQueryToTable(String name, String query) throws MySickWellException {
         Table currentTable = database.getTable(name);
         String[] parametersString = util.getParametersFromQuery(query);
-        try {
-            Map<Column, LinkedList<?>> data = currentTable.getData();
-            Iterator it = data.entrySet().iterator();
-            int index = 0;
-            while (it.hasNext()) {
-                Map.Entry<Column, LinkedList<?>> pair = (Map.Entry) it.next();
-                Column column = pair.getKey();
-                Class<?> classOfColumn = column.getType().getDatatype();
-                LinkedList dataEntries = pair.getValue();
+        Map<Column, LinkedList<?>> data = currentTable.getData();
+        Iterator it = data.entrySet().iterator();
+        int index = 0;
+        while (it.hasNext()) {
+            Map.Entry<Column, LinkedList<?>> pair = (Map.Entry) it.next();
 
-                //addHelper(dataEntries, (classOfColumn.cast(parametersString[index])));
-                dataEntries.add(classOfColumn.cast(parametersString[index])); //TODO: casting string to integer still not good.
+            Column column = pair.getKey();
+            LinkedList dataEntries = pair.getValue();
+            ColumnType classOfColumn = column.getType();
 
-                index++;
-            }
-            logger.info(currentTable.toString());
-            return parametersString.length;
-        } catch (ClassCastException e) {
-            database.setTable(name, currentTable); //TODO: memento pattern refactor BEFORE update and delete.
-            throw new Exception(); //TODO: own sqlexception and subclasses
+            String valueString = parametersString[index];
+            addHelper(dataEntries, util.makeParameterFromString(valueString, classOfColumn));
+            index++;
         }
+        logger.info(currentTable.toString());
+        return parametersString.length;
     }
 
-    private <V> void addHelper(LinkedList<V> linkedList, V parameter) {
+    public <V> void addHelper(LinkedList<V> linkedList, V parameter) {
         linkedList.add(parameter);
     }
 }
