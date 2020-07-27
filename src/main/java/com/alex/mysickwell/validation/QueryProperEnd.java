@@ -12,7 +12,7 @@ public class QueryProperEnd extends Middleware {
     @Override
     public boolean check(String query) throws MySickWellException {
         if (query.endsWith(endingString)) {
-            return checkNext(query.substring(0, query.length() - 2));
+            return checkNext(query.substring(0, query.length() - endingString.length()));
         }
         throw new IllegalEndOfQueryException(endingString);
     }
