@@ -34,7 +34,7 @@ public class InsertQueryUtil {
     public <T> T makeParameterFromString(String valueString, ColumnType classOfColumn) throws MySickWellException { //TODO: find better way
         try {
             return classOfColumn.convert(valueString);
-        } catch (ClassCastException | NumberFormatException e) {
+        } catch (IllegalArgumentException e) {
             throw new IllegalParametersInQueryException("Illegal parameter in query at: " + valueString + ". Expected type was " + classOfColumn.getDatatype().getSimpleName());
         }
     }

@@ -20,7 +20,7 @@ public enum ColumnType {
         return datatype;
     }
 
-    public <F> F convert(String string) {
+    public <F> F convert(String string) throws IllegalArgumentException {
         return (F) this.converter.apply(string);
     }
 
