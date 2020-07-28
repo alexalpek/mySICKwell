@@ -19,7 +19,7 @@ public class SelectHasParameters extends Middleware {
         if (queryParts.length < 2)
             throw new MySickWellException("Malformed query.");
         String parametersString = queryParts[0].trim();
-        if (parametersString.equals("")) {
+        if (!parametersString.equals("")) {
             return checkNext(query);
         }
         throw new IllegalParametersInQueryException("Query has no parameters");

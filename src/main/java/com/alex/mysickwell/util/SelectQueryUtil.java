@@ -6,6 +6,9 @@ import java.util.Arrays;
 
 @Component
 public class SelectQueryUtil {
+
+    private String QUERY_START_STRING = "SELECT ";
+
     public String getTableNameFromQuery(String query) {
         String[] queryData = query.split("(?i)FROM ");
         String tableNameWithSemiColon = queryData[1];
@@ -14,9 +17,11 @@ public class SelectQueryUtil {
     }
 
     public String[] getParametersFromQuery(String query) {
-        String[] queryData = query.split("(?i)FROM ");
+        String[] queryData = query
+                .substring(QUERY_START_STRING.length())
+                .split("(?i)FROM ");
         return Arrays
-                .stream(queryData[1].split(","))
+                .stream(queryData[0].split(","))
                 .map(String::trim)
                 .toArray(String[]::new);
     }
