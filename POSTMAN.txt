@@ -1,0 +1,14 @@
+PUT - http://localhost:8080/create
+    CREATE TABLE animals (name VARCHAR, age INTEGER, type VARCHAR);
+
+PUT - http://localhost:8080/insert
+    INSERT INTO animals VALUES (Lömp, 1, Moth);
+
+PUT - http://localhost:8080/insert
+    INSERT INTO animals VALUES (Blöki, 1, Dog);
+
+POST - http://localhost:8080/select
+    SELECT * FROM animals;
+
+POST - http://localhost:8080/select
+    SELECT name, type FROM animals;

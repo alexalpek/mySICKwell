@@ -22,7 +22,4 @@ public class Database {
         return tables.get(name);
     }
 
-    public void setTable(String tableName, Table table) {
-        tables.put(tableName, table);
-    }
 }
