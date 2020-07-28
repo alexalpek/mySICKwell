@@ -35,7 +35,6 @@ public class SelectService {
     public Table selectTable(String query) throws MySickWellException {
         if (validator.check(query)) {
             String tableName = util.getTableNameFromQuery(query);
-            logger.info(database.getTables().toString());
             Table table = database.getTable(tableName);
             if (table == null)
                 throw new TableDoesNotExistException(tableName);
@@ -44,6 +43,7 @@ public class SelectService {
                 return table;
             }
             Map<Column, LinkedList<?>> result = getColumnsFromTable(table, parameters);
+            logger.info("Result of the query: " + result.toString());
             return new Table(result);
         }
         throw new MySickWellException("Malformed query: " + query);
