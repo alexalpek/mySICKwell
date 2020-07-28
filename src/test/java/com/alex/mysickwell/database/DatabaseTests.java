@@ -5,8 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class DatabaseTests {
@@ -23,6 +22,12 @@ public class DatabaseTests {
         assertFalse(database.getTables().containsKey("TableName"));
         database.createTable("TableName", null);
         assertTrue(database.getTables().containsKey("TableName"));
+    }
+
+    @Test
+    void getTableTest() {
+        database.createTable("TableName", null);
+        assertNotNull(database.getTable("TableName"));
     }
 
 }
