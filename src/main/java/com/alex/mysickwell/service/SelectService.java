@@ -43,18 +43,23 @@ public class SelectService {
             if (parameters.size() == 1 && parameters.get(0).equals("*")) {
                 return table;
             }
-            Map<Column, LinkedList<?>> result = new LinkedHashMap<>();
-            Iterator<Map.Entry<Column, LinkedList<?>>> iterator = database.getTable(tableName).getData().entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Column, LinkedList<?>> pair = (Map.Entry) iterator.next();
-                Column column = pair.getKey();
-                LinkedList dataEntries = pair.getValue();
-                if (parameters.contains(column.getName())) {
-                    result.put(column, dataEntries);
-                }
-            }
+            Map<Column, LinkedList<?>> result = getColumnsFromTable(table, parameters);
             return new Table(result);
         }
-        return null;
+        throw new MySickWellException("Malformed query: " + query);
+    }
+
+    public Map<Column, LinkedList<?>> getColumnsFromTable(Table table, List<String> parameters) {
+        Map<Column, LinkedList<?>> result = new LinkedHashMap<>();
+        Iterator<Map.Entry<Column, LinkedList<?>>> iterator = table.getData().entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Column, LinkedList<?>> pair = (Map.Entry) iterator.next();
+            Column column = pair.getKey();
+            LinkedList dataEntries = pair.getValue();
+            if (parameters.contains(column.getName())) {
+                result.put(column, dataEntries);
+            }
+        }
+        return result;
     }
 }
