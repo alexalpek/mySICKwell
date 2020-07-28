@@ -18,7 +18,8 @@ Insert into table with the syntax of:
 ```INSERT INTO table_name VALUES(value1, value2);```
 
 Select from table with the syntax of:\
-```SELECT * FROM table_name;```
+```SELECT * FROM table_name;``` for all columns or\
+```SELECT column1,column2 FROM table_name;``` for specific columns
 
 
 ## Contributing
