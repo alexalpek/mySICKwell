@@ -4,6 +4,8 @@ MySickWell is my hobby project, trying to create a basic (dumber) version of SQL
 
 ## Versions:
 2020.07.27 - After the first week: Create table, Insert table, Select * from table. Tests has ~85% coverage
+2020.07.28 - Select with column names! Tests has ~92% coverage
+
 
 ## Technologies
 Java (11 runs under the hood at the moment) and Spring. 
