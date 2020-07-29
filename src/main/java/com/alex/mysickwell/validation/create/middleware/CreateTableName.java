@@ -7,6 +7,8 @@ import com.alex.mysickwell.model.Database;
 import com.alex.mysickwell.validation.Middleware;
 import lombok.AllArgsConstructor;
 
+import java.util.Arrays;
+
 @AllArgsConstructor
 public class CreateTableName extends Middleware {
 
@@ -14,10 +16,12 @@ public class CreateTableName extends Middleware {
 
     @Override
     public boolean check(String query) throws MySickWellException {
-        String[] list = query.trim().split("\\(");
+        String[] list = Arrays
+                .stream(query.trim().split("\\("))
+                .map(String::trim).toArray(String[]::new);
         if (list.length < 2 || query.startsWith("(") || list[0].equals(""))
             throw new QueryHasNoTableNameException();
-        if (!database.getTables().containsKey(list[0])){
+        if (!database.getTables().containsKey(list[0])) {
             return checkNext(query);
         }
         throw new TableAlreadyExistsException("Table already exists: " + list[0]);
